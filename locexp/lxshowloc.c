@@ -13,6 +13,8 @@
 #define U_ICUDATA_CURR U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "curr"
 #define U_ICUDATA_ZONE U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "zone"
 
+void showNumberSystem(LXContext *lx, const char *locale, const char *nsys);
+
 static void showSubArray(LXContext *lx, const char *locale, const char *transKey, const char *path, const char *keyPath, UBool compareToDisplay) {
   UResourceBundle *subRb = NULL;
   UErrorCode status = U_ZERO_ERROR;

@@ -2,6 +2,9 @@
 *   Copyright (C) 1999-2006, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 ***********************************************************************/
+#define _POSIX_C_SOURCE 200809L
+#include <string.h>
+#include <strings.h>
 
 /* Routines having to do with choosing converters */
 

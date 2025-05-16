@@ -40,7 +40,7 @@ U_CAPI UTimeZone *utz_openDefault() {
     return z;
 }
 
-U_CAPI int utz_getID(const UTimeZone *zone, char *idbuf, int idlen) {
+U_CAPI int getID(const UTimeZone *zone, char *idbuf, int idlen) {
     icu::UnicodeString id;
     ((icu::TimeZone*)zone)->getID(id);
     idbuf[0]=0;

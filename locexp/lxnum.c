@@ -16,6 +16,7 @@ const UChar COLONSTR[] = { 0x20,0x3a, 0x20, 0 };
 const UChar CURRUNK[] = { 0x58, 0x58, 0x58, 0 }; /* XXX */
 
 #define NUMBERS "numbers"
+void printBigString(LXContext *lx, const UChar *str);
 
 /* Routines having to do with the number pattern sample */
 void showNumberSystem(LXContext *lx, const char *locale, const char *nsys) {

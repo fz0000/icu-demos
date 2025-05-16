@@ -1,3 +1,7 @@
+#define _POSIX_C_SOURCE 200809L
+#include <string.h>
+#include <strings.h>
+
 /*
  *  cgiutil.c
  *  icuapps
@@ -8,7 +12,9 @@
  *
  */
 
+#define _GNU_SOURCE
 #include "unicode/cgiutil.h"
+#include "unicode/lx_utils.h"
 #include <unicode/ustdio.h>
 #include "unicode/unum.h"
 #include <stdarg.h>

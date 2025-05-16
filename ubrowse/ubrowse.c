@@ -58,10 +58,11 @@
           &cs=XXXX          .. continue search from XXXX
 
 */
-
+#define _POSIX_C_SOURCE 200809L
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 
 #include "unicode/utypes.h"
 #include "unicode/ustring.h"
@@ -725,7 +726,7 @@ main(int argc,
      char **argv)
 {
   char *qs;
-  char *pi;
+  const char *pi;
   char *tmp = NULL;
   UChar chars[800];
   UChar32 theChar;
@@ -1320,7 +1321,7 @@ main(int argc,
 
   if(anyDecompose)
     {
-      u_fprintf(FSWF("NOTE_ANY_DECOMPOSE", "Note: text in <span class='anydecompose'>Italic Green</span> is the best-try using decomposition. Underscore (_) denotes missing characters in the decomposition."/*Note about green text*/), gOut);
+      u_fprintf_u(gOut, FSWF("NOTE_ANY_DECOMPOSE", "Note: text in <span class='anydecompose'>Italic Green</span> is the best-try using decomposition. Underscore (_) denotes missing characters in the decomposition."/*Note about green text*/));
     }
 
   uvi[0]=0xFF;

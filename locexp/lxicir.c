@@ -2,6 +2,10 @@
 *   Copyright (C) 2004-2006, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 ***********************************************************************/
+#define _POSIX_C_SOURCE 200809L
+#include <string.h>
+#include <strings.h>
+
 #include "locexp.h"
 #include <unicode/ustdio.h>
 #include "unicode/putil.h"

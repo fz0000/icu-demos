@@ -2,6 +2,10 @@
 *   Copyright (C) 2002-2005, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 ***********************************************************************/
+#define _POSIX_C_SOURCE 200809L
+#include <string.h>
+#include <strings.h>
+
 
 /* Search Explorer... search the Locales looking for strings */
 

@@ -2,6 +2,10 @@
 *   Copyright (C) 1999-2015, International Business Machines
 *   Corporation and others.  All Rights Reserved.
 ***********************************************************************/
+#define _POSIX_C_SOURCE 200809L
+#include <string.h>
+#include <strings.h>
+
 
 #include "locexp.h"
 #include "unicode/udata.h"
@@ -340,7 +344,7 @@ static void appendSomeOfArrayTo(LXContext *lx, UResourceBundle *aBundle, UChar *
   const char *key2;
   char *keytmp = strdup(key);
   
-  sub = ures_findSubResource(aBundle, keytmp, sub, &status);
+  sub = ures_getByKey(aBundle, keytmp, sub, &status);
   free(keytmp);
   if(U_FAILURE(status)) {
     return;

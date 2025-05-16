@@ -6,7 +6,9 @@
 /*****************************************
    Some random utilities..
 */
-
+#define _POSIX_C_SOURCE 200809L
+#include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include "unicode/putil.h"
 #include "unicode/lx_utils.h"

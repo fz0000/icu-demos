@@ -26,6 +26,9 @@
 ****************************************************************************
 */
 
+#define _POSIX_C_SOURCE 200809L
+#include <string.h>
+#include <strings.h>
 #include "locexp.h"
 
 #include "demo_settings.h"

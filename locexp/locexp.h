@@ -7,6 +7,8 @@
 
 /** Headers. Watch out for too many unixy things, tends to break win32 **/
 
+#define _POSIX_C_SOURCE 200809L
+
 #include "unicode/utypes.h"
 #include "demo_settings.h"
 

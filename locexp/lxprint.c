@@ -10,6 +10,8 @@
 #include <unicode/uscript.h>
 #include <unicode/ulocdata.h>
 /* #include "uresimp.h" */
+#include <unicode/uenum.h>
+#include <unicode/utimzone.h>
 
 /* Explain what the status code means --------------------------------------------------------- */
 
@@ -331,16 +333,24 @@ void printStatusTable(LXContext *lx)
     u_fprintf(lx->OUT, "<br />\r\n");
 
     {
-        UTimeZone *def;
-        char buf[245];
-        def = utz_openDefault();
-        utz_getID(def, buf,245);        
-        u_fprintf(lx->OUT, "%S: %s \r\n",
-                  FSWF("poweredby_tz", "Timezone ID"), buf);
-        utz_close(def);
-        u_fprintf(lx->OUT, "<a href='?x=chz'>(%S)</a>", 
-                  FSWF("EXPLORE_change", "Change"));
+        UCalendar *cal;
+        UErrorCode status = U_ZERO_ERROR;
+        UChar idBuf[245];
+        int32_t idLen;
+
+        cal = ucal_open(NULL, 0, uloc_getDefault(), UCAL_DEFAULT, &status);
+        if (U_SUCCESS(status)) {
+            idLen = ucal_getTimeZoneID(cal, idBuf, sizeof(idBuf) / sizeof(UChar), &status);
+            if (U_SUCCESS(status)) {
+                u_fprintf(lx->OUT, "%S: %.*S \r\n",
+                          FSWF("poweredby_tz", "Timezone ID"), idLen, idBuf);
+                u_fprintf(lx->OUT, "<a href='?x=chz'>(%S)</a>",
+                          FSWF("EXPLORE_change", "Change"));
+            }
+            ucal_close(cal);
+        }
     }
+
 
 #if 0
     if(lx->inDemo == false)
@@ -887,33 +897,37 @@ static void endCell(LXContext *lx)
 
 
 void showKeywordMenu(LXContext *lx, const char *e, const char *kwVal, int32_t *n, const char *myURL, const char *prefix, char part, UErrorCode *status) {
+    UEnumeration *en = NULL;
+    const char *s;
 
+    if(U_FAILURE(*status)) {
+        return;
+    }
 
-  UEnumeration *en;
-  const char *s;
+    if(!strcmp(e, "collation")) {
+        en = ucol_getKeywordValues(e, status);
+    } else if(!strcmp(e, "currency")) {
+        static const char* currencies[] = {"USD", "EUR", "JPY", "CNY", "GBP", "INR", "KRW", "BRL"};
+        en = uenum_openCharStringsEnumeration(currencies, sizeof(currencies) / sizeof(currencies[0]), status);
+    } else if(!strcmp(e, "number")) {
+        static const char* numbers[] = {"default", "traditional", "finance", "native"};
+        en = uenum_openCharStringsEnumeration(numbers, sizeof(numbers) / sizeof(numbers[0]), status);
+    } else {
+        // fallback: just use default if unknown
+        static const char* fallback[] = {"default"};
+        en = uenum_openCharStringsEnumeration(fallback, 1, status);
+    }
 
-  if(U_FAILURE(*status)) {
-    return;
-  }
-  /*u_fprintf(lx->OUT, "%s=\n", e);*/
-  if(!strcmp(e, "collation")) {
-    en = ucol_getKeywordValues(e, status);
-  } else if(!strcmp(e, "currency")) {
-    en = ures_getKeywordValues( NULL, "Currencies", status);
-  } else if(!strcmp(e, "number")) {
-    en = ures_getKeywordValues( NULL, "Numbers", status);
-  } else  {
-    en = ures_getKeywordValues( NULL, e, status);
-  }
-  while((s = uenum_next(en, NULL, status))) {
-    UChar u[1024];
-    char floc[345];
-    sprintf(floc, "@%s=%s", e, s);
-    uloc_getDisplayKeywordValue(floc, e, lx->dispLocale, u, 1024, status);
-    printCell(lx, myURL, prefix, part, s, u, *n, kwVal);
-    (*n) ++;
-  }
-  uenum_close(en);
+    while((s = uenum_next(en, NULL, status))) {
+        UChar u[1024];
+        char floc[345];
+        sprintf(floc, "@%s=%s", e, s);
+        uloc_getDisplayKeywordValue(floc, e, lx->dispLocale, u, 1024, status);
+        printCell(lx, myURL, prefix, part, s, u, *n, kwVal);
+        (*n)++;
+    }
+
+    uenum_close(en);
 }
 
 
@@ -934,7 +948,7 @@ static void showChangeTimezone(LXContext *lx) {
     strcpy(lbuf, "und_");
     
     def = utz_openDefault();
-    utz_getID(def, buf,245);
+    getID(def, buf,245);
     
     u_fprintf(lx->OUT, "Current %S: %s<br>\r\n",
               FSWF("poweredby_tz", "Timezone ID"), buf);
